@@ -30,7 +30,7 @@ app.get('/webhook', function (req, res) {
 })
 
 app.get('/test', function (req, res) {
-  res.send('msg: ' + req.msg + ' sessionId: ' + req.sessionId);
+  res.send(JSON.stringify(req));
 })
 
 app.post('/webhook', function (req, res) {
