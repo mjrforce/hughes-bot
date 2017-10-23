@@ -30,7 +30,9 @@ app.get('/webhook', function (req, res) {
 })
 
 app.get('/test', function (req, res) {
-  res.send(JSON.stringify(req.body));
+  
+  AgentSays(req.query.msg, req.query.id);
+  res.send('id=' + req.query.id + ' msg=' + req.query.msg);
 })
 
 app.post('/webhook', function (req, res) {
@@ -77,7 +79,14 @@ app.post('/webhook', function (req, res) {
   
   org.authenticate({ username: 'matt@playhouse.dev.liveagent', password: 'Purdue321!!'}).then(function(oauth){
 
-    botchat = nforce.createSObject('Bot_Chat__c', {Source__c: req.body.originalRequest.source });
+    console.log(req.body);
+	var source;
+	if(typeof req.body.originalRequest != 'undefined')
+	  source = req.body.originalRequest.source;
+	else
+	  source = req.body.source;
+	  
+    botchat = nforce.createSObject('Bot_Chat__c', {Source__c: source });
 	
 	if(routeTo == 'CSR')
 	   botchat.set('Route_To__c', routeTo);
