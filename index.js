@@ -5,6 +5,7 @@ const request = require('request-promise');
 const app = express();
 const nforce = require('nforce');
 const LIVE_AGENT_URL = 'https://d.la3-c1cs-dfw.salesforceliveagent.com/chat/rest/';
+const CLIENT_ACCESS_TOKEN = 'f007ead0358c4e39ae9dbe638ae71e84';
 
 const org = nforce.createConnection({
   clientId: '3MVG9PE4xB9wtoY9IbhNtYSuAVMe8N3gOW1PI98B7XpLZ2ROxWkOggFSe4BHggK8XtQfeg99nsZd8PiA9mESz',
@@ -26,6 +27,10 @@ app.get('/', function (req, res) {
 })
 app.get('/webhook', function (req, res) {
   res.send('You must POST your request')
+})
+
+app.get('/test', function (req, res) {
+  res.send('msg: ' + req.msg + ' sessionId: ' + req.sessionId);
 })
 
 app.post('/webhook', function (req, res) {
@@ -141,6 +146,38 @@ app.listen(app.get('port'), function () {
   console.log('* Webhook service is listening on port:' + app.get('port'))
 })
 
+function AgentSays(msg, sessionId){
+    request({
+		  url: "https://api.dialogflow.com/v1/query?v=20150910&e=AGENT_SAYS&lang=en&sessionId=" + sessionId,
+		  method: 'POST',
+		  headers: {
+			'Authorization': 'Bearer ' + CLIENT_ACCESS_TOKEN,
+			'Content-Type': 'application/json'
+		  },
+		  json: {
+					"contexts": [],
+					"lang": "en",
+					"event":{  
+					  "name":"<event_name>",
+					  "data":{
+						  “say”: msg  
+					  }
+					},
+					"sessionId": sessionId,
+					"timezone": "America/New_York"
+				}
+		}, (error, response) => {
+		  if (error) {
+			  console.log('line 154');
+			  console.log('Error sending message: ', error);
+		  } else if (response.body.error) {
+			  console.log('line 158');
+			  console.log('Error: ', response.body.error);
+		  }else{
+			  console.log(JSON.stringify(response));		  
+		  }
+		});	
+}
 
 function sendLiveAgentMessage(session, sobj, msg){
    
