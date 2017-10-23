@@ -158,9 +158,9 @@ function AgentSays(msg, sessionId){
 					"contexts": [],
 					"lang": "en",
 					"event":{  
-					  "name":"<event_name>",
+					  "name":"AGENT_SAYS",
 					  "data":{
-						  “say”: msg  
+						 "say": msg
 					  }
 					},
 					"sessionId": sessionId,
