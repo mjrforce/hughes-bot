@@ -30,7 +30,7 @@ app.get('/webhook', function (req, res) {
 })
 
 app.get('/test', function (req, res) {
-  res.send(JSON.stringify(req));
+  res.send(JSON.stringify(req.body));
 })
 
 app.post('/webhook', function (req, res) {
