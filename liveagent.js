@@ -52,7 +52,7 @@ exports.start = function(session, source, apiaiSession, sobj, sender, senderid){
       sobj.set('Live_Chat_Affinity_Token__c', res.affinityToken);
       sobj.set('Live_Chat_Sequence__c', 0);
 
-      org.authenticate({ username: contants.SF_USERNAME, password: constants.SF_PASSWORD})
+      org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
         .then(function(oauth){
            org.update({sobject: sobj}, function(err, resp){
            console.log(err);
