@@ -17,7 +17,9 @@
   "author": "Raymond Velasquez <at.supermamon@gmail.com> (https://supermamon.com)",
   "license": "ISC",
   "dependencies": {
+    "apiai-promise": "^1.0.0",
     "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
     "express": "^4.15.3",
     "nforce": "^1.7.0",
     "request": "^2.83.0",
