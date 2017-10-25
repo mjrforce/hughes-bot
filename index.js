@@ -19,17 +19,6 @@ const client = new twilio(constants.TWILIO_ACCOUNT_SID, constants.TWILIO_AUTH_TO
 app.set('port', (process.env.PORT || 5000))
 app.use(bodyParser.json());
 
-alexaapp.launch( function( request, response ) {
-	response.say( 'Welcome to Hughes Network' ).reprompt( 'What is your name?' ).shouldEndSession( false );
-} );
-
-alexaapp.error = function( exception, request, response ) {
-	console.log(exception)
-	console.log(request);
-	console.log(response);
-	response.say( 'Sorry an error occured ' + error.message);
-};
-
 alexaapp.intent('welcomeUser',
   {
     "slots":{"name":"AMAZON.US_FIRST_NAME"}
