@@ -40,7 +40,7 @@ exports.processWebhook = function(aresult){
     routeTo = 'CSR';
   }
 
-  org.authenticate({ username: 'matt@playhouse.dev.liveagent', password: 'Purdue321!!'})
+  org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
     .then(function(oauth){
       botchat = nforce.createSObject('Bot_Chat__c', {Source__c: source, Route_To__c: routeTo });
       botchat.setExternalId('Session_Id__c', aresult.sessionId);

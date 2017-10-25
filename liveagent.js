@@ -8,7 +8,7 @@ exports.post = function(session, sobj, msg){
 	var seq = sobj.get('Live_Chat_Sequence__c') + 1;
 	sobj.set('Live_Chat_Sequence__c', seq);
 
-  org.authenticate({ username: 'matt@playhouse.dev.liveagent', password: 'Purdue321!!'})
+  org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
     .then(function(oauth){
        org.update({sobject: sobj}, function(err, resp){
        console.log(err);
@@ -52,7 +52,7 @@ exports.start = function(session, source, apiaiSession, sobj, sender, senderid){
       sobj.set('Live_Chat_Affinity_Token__c', res.affinityToken);
       sobj.set('Live_Chat_Sequence__c', 0);
 
-      org.authenticate({ username: 'matt@playhouse.dev.liveagent', password: 'Purdue321!!'})
+      org.authenticate({ username: contants.SF_USERNAME, password: constants.SF_PASSWORD})
         .then(function(oauth){
            org.update({sobject: sobj}, function(err, resp){
            console.log(err);
