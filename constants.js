@@ -12,6 +12,8 @@ exports.APIAI_REQUIRE_AUTH = (process.env.APIAI_REQUIRE_AUTH || true);
 exports.APIAI_AUTH_TOKEN = process.env.APIAI_AUTH_TOKEN;
 exports.FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 exports.FB_AUTH_TOKEN = process.env.FB_AUTH_TOKEN;
+exports.TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+exports.TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
 
 exports.SF_ORG = nforce.createConnection({
   clientId: this.SF_CLIENT_ID,

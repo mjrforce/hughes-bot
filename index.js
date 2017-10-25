@@ -1,14 +1,51 @@
+
 const dotenv = require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request-promise');
+const twilio = require('twilio');
+const alexa = require('alexa-app');
+
 const facebook = require('./facebook');
 const controller = require('./controller');
-const app = express();
+const twilio_router = require('./twilio_router');
 const constants = require('./constants');
+
+const app = express();
+const alexaapp = new alexa.app('hughes');
+
+const client = new twilio(constants.TWILIO_ACCOUNT_SID, constants.TWILIO_AUTH_TOKEN);
 
 app.set('port', (process.env.PORT || 5000))
 app.use(bodyParser.json());
+
+alexaapp.launch( function( request, response ) {
+	response.say( 'Welcome to Hughes Network' ).reprompt( 'What is your name?' ).shouldEndSession( false );
+} );
+
+alexaapp.error = function( exception, request, response ) {
+	console.log(exception)
+	console.log(request);
+	console.log(response);
+	response.say( 'Sorry an error occured ' + error.message);
+};
+
+alexaapp.intent('welcomeUser',
+  {
+    "slots":{"name":"AMAZON.US_FIRST_NAME"}
+	,"utterances":[
+		"My Name is {John|Matt|Sam|name}",
+
+		]
+  },
+  function(request,response) {
+    var name = request.slot('name');
+    response.say("Welcome "+name);
+  }
+);
+
+alexaapp.express({ expressApp: app});
+app.use('/twilio', twilio_router);
 
 app.get('/', function (req, res) {
   res.send('Use the /webhook endpoint.')
@@ -65,7 +102,7 @@ app.post('/webhook', function (req, res) {
 
   // and some validation too
   if (!req.body || !req.body.result || !req.body.result.parameters) {
-    return res.status(400).send('Bad Request')
+    return res.status(400).send('Bad Request. hombre.')
   }
 
   var webhookReply = controller.processWebhook(req.body);
@@ -78,6 +115,7 @@ app.post('/webhook', function (req, res) {
   });
 
 });
+
 
 app.listen(app.get('port'), function () {
   console.log('* Webhook service is listening on port:' + app.get('port'))
