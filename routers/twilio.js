@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const controller = require('./controller');
-const VoiceResponse = require('twilio').twiml.VoiceResponse;
+const controller = require('../functions/controller');
+const constants = require('../constants');
+const twilio = require('twilio');
+const client = new twilio(constants.TWILIO_ACCOUNT_SID, constants.TWILIO_AUTH_TOKEN);
+const VoiceResponse = twilio.twiml.VoiceResponse;
 // middleware that is specific to this router
 
 router.use(bodyParser.urlencoded({extended: false}));
@@ -10,6 +13,14 @@ router.use(function timeLog (req, res, next) {
   console.log('Time: ', Date.now())
   next()
 })
+
+router.get('/sms', function (req, res) {
+  res.send('You must POST your request')
+});
+
+router.get('/voice', function (req, res) {
+  res.send('You must POST your request')
+});
 
 // define the post route
 router.post('/sms', function (req, res) {

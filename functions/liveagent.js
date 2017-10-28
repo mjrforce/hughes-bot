@@ -1,6 +1,6 @@
 const nforce = require('nforce');
 const request = require('request-promise');
-const constants = require('./constants');
+const constants = require('../constants');
 const org = constants.SF_ORG;
 
 exports.post = function(session, sobj, msg){

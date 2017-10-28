@@ -1,5 +1,5 @@
 const request = require('request-promise');
-const constants = require('./constants');
+const constants = require('../constants');
 
 exports.post = function(senderid, msg){
     return request({

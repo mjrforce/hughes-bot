@@ -17,7 +17,7 @@
   "author": "Raymond Velasquez <at.supermamon@gmail.com> (https://supermamon.com)",
   "license": "ISC",
   "dependencies": {
-    "alexa-app": "^4.2.0",
+    "alexa-bootstrap": "^0.4.2",
     "apiai-promise": "^1.0.0",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
