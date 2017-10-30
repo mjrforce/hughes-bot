@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const controller = require('../functions/controller');
+const dialogflow = require('../helpers/dialogflow');
 const constants = require('../constants');
 const twilio = require('twilio');
 const client = new twilio(constants.TWILIO_ACCOUNT_SID, constants.TWILIO_AUTH_TOKEN);
@@ -25,7 +25,7 @@ router.get('/voice', function (req, res) {
 // define the post route
 router.post('/sms', function (req, res) {
   console.log(req.body);
-  controller.processMessage(req.body.Body, req.body.From, 'SMS',
+  dialogflow.processMessage(req.body.Body, req.body.From, 'SMS',
     {
       id: req.body.From,
       name: req.body.From

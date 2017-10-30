@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const constants = require('../constants');
-const controller = require('../functions/controller');
+const dialogflow = require('../helpers/dialogflow');
 
 router.use(bodyParser.json());
 
@@ -19,7 +19,7 @@ router.post('/', function (req, res) {
     return res.status(400).send('Bad Request. hombre.')
   }
 
-  var webhookReply = controller.processWebhook(req.body);
+  var webhookReply = dialogflow.processWebhook(req.body);
   console.log(webhookReply);
   // the most basic response
   res.status(200).json({
@@ -29,4 +29,5 @@ router.post('/', function (req, res) {
   });
 
 });
+
 module.exports = router

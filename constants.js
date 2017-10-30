@@ -1,4 +1,3 @@
-const nforce = require('nforce');
 exports.LIVE_AGENT_URL = process.env.LIVE_AGENT_URL;
 exports.SF_CLIENT_ID = process.env.SF_CLIENT_ID;
 exports.SF_CLIENT_SECRET = process.env.SF_CLIENT_SECRET;
@@ -14,12 +13,3 @@ exports.FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 exports.FB_AUTH_TOKEN = process.env.FB_AUTH_TOKEN;
 exports.TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
 exports.TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
-
-exports.SF_ORG = nforce.createConnection({
-  clientId: this.SF_CLIENT_ID,
-  clientSecret: this.SF_CLIENT_SECRET,
-  redirectUri: this.SF_REDIRECT_URL,
-  apiVersion: this.SF_API_VERSION,  // optional, defaults to current salesforce API version
-  environment: this.SF_ENVIRONMENT,  // optional, salesforce 'sandbox' or 'production', production default
-  mode: 'single' // optional, 'single' or 'multi' user mode, multi default
-});

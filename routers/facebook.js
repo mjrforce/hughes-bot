@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const facebook = require('../functions/facebook');
-const controller = require('../functions/controller');
+const facebook = require('../helpers/facebook');
+const dialogflow = require('../helpers/dialogflow');
 
 router.use(bodyParser.json());
 
@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
           facebook.getName(event.sender.id)
           .then(function(result){
             var r = JSON.parse(result);
-            return controller.processMessage(event.message.text, event.sender.id, 'Facebook',
+            return dialogflow.processMessage(event.message.text, event.sender.id, 'Facebook',
               {
                 id: event.sender.id,
                 name: r.first_name + ' ' + r.last_name
