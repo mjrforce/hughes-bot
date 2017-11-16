@@ -9,17 +9,17 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 alexa.launch( function( request, response ) {
-  console.log('Welcome to Hughes Network');
+
 	response.say( 'Welcome to Hughes Network. Ask me things like What is my balance or check on the status of a case. How may I help you?' );
 }) ;
 
 alexa.intent('welcomeUser',
   (req,res, slots) => {
     res.say("Welcome "+ slots.name).end();
-    console.log('starting log to salesforce from alexa');
+
     var name = slots.name;
-    console.log(name);
-    console.log(JSON.stringify(req));
+
+
     salesforce.logToSalesforce('Bot', 'Alexa', {id: req.data.session.sessionId  , name: name}, req.data.session.sessionId, 'My name is ' + name, 'Hello ' + name);
   });
 
@@ -48,9 +48,9 @@ alexa.intent('welcomeUser',
     });
 
 router.post('/hughes', function(req, res){
-  console.log(req.body);
+
   alexa.request(req.body).then(function(response){
-    console.log(response);
+
     res.json(response);
   })
 });

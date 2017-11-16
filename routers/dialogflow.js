@@ -7,7 +7,7 @@ const dialogflow = require('../helpers/dialogflow');
 router.use(bodyParser.json());
 
 router.post('/', function (req, res) {
-
+  console.log(JSON.stringify(req.body));
   if (constants.APIAI_REQUIRE_AUTH) {
     if (req.headers['auth-token'] !== constants.APIAI_AUTH_TOKEN) {
       return res.status(401).send('Unauthorized')
@@ -19,14 +19,20 @@ router.post('/', function (req, res) {
     return res.status(400).send('Bad Request. hombre.')
   }
 
-  var webhookReply = dialogflow.processWebhook(req.body);
-  console.log(webhookReply);
-  // the most basic response
-  res.status(200).json({
-    source: 'webhook',
-    speech: webhookReply,
-    displayText: webhookReply
+  dialogflow.processWebhook(req.body).then(function(result){
+
+    // the most basic response
+    var resp = {
+      source: 'webhook',
+      speech: result.botResponse,
+      displayText: result.botResponse,
+      contextOut: [{name:"loginRequired", "lifespan":5, "parameters":{"isRequired": result.loginRequired}}],
+      data: { loginRequired: result.loginRequired}
+    };
+
+    res.status(200).json(resp);
   });
+
 
 });
 

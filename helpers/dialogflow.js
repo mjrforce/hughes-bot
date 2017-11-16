@@ -6,7 +6,7 @@ const apiai = require('apiai-promise');
 const apiaiApp = apiai(constants.APIAI_CLIENT_ACCESS_TOKEN);
 
 exports.processMessage = function(msg, sessionId, source, sender){
-  console.log('process message');
+
   return apiaiApp.textRequest(msg, {
     sessionId: sessionId,
     contexts: [{
@@ -22,16 +22,17 @@ exports.processMessage = function(msg, sessionId, source, sender){
 
 exports.processWebhook = function(aresult){
 
-  console.log('start webhook');
   var routeTo = 'Bot';
   var webhookReply = aresult.result.fulfillment.speech;
   var source = 'Google';
   var sender = { id: 'n/a', name: 'TEST'}
   if(typeof aresult.result.contexts != 'undefined'){
+    if(aresult.result.contexts.length > 0){
     source = aresult.result.contexts[0].parameters.source;
     sender = {id: aresult.result.contexts[0].parameters.senderid,
               name: aresult.result.contexts[0].parameters.sendername} ;
   }
+}
 
   if(source == '' || source == null)
     source = 'Google';
@@ -40,9 +41,30 @@ exports.processWebhook = function(aresult){
      aresult.result.metadata.intentName == 'Fallback' ){
     routeTo = 'CSR';
   }
-  console.log('start log to salesforce');
-  var sf = salesforce.logToSalesforce(routeTo, source, sender, aresult.sessionId, aresult.result.resolvedQuery, webhookReply);
-  if(source == 'Facebook' || source == 'SMS')
-    liveagent.start(sf);
-  return webhookReply;
+
+  console.log(source);
+  if(source == 'Google'){
+    return salesforce.linkUser(aresult.sessionId, aresult.originalRequest.data.user.accessToken)
+      .then(function(result){
+        console.log('After Linking...');
+        return salesforce.logToSalesforce(routeTo,
+                                          source,
+                                          sender,
+                                          aresult.result.parameters,
+                                          aresult.sessionId,
+                                          aresult.result.resolvedQuery,
+                                          webhookReply
+                                          );
+      });
+  }else{
+     return salesforce.logToSalesforce(routeTo,
+                                       source,
+                                       sender,
+                                       aresult.result.parameters,
+                                       aresult.sessionId,
+                                       aresult.result.resolvedQuery,
+                                       webhookReply
+                                       );
+  }
+
 };

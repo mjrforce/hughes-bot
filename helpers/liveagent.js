@@ -10,13 +10,15 @@ function post(session, sobj, msg){
   var org = salesforce.getOrg();
   sobj.set('Live_Chat_Sequence__c', seq);
 
+  console.log(JSON.stringify(sobj));
   org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
     .then(function(oauth){
        org.update({sobject: sobj}, function(err, resp){
        console.log(err);
 	     });
     });
-
+  console.log(JSON.stringify(session));
+  console.log(seq);
 	request({
 	url: constants.LIVE_AGENT_URL + 'Chasitor/ChatMessage',
 	method: 'POST',
@@ -39,7 +41,7 @@ function post(session, sobj, msg){
 exports.post = post;
 
 function startSession(sobj){
-    console.log('inside starting live agent');
+
     request({
 		  uri: constants.LIVE_AGENT_URL + 'System/SessionId',
 		  method: 'GET',
@@ -51,15 +53,14 @@ function startSession(sobj){
 
       var session = JSON.parse(response);
       var org = salesforce.getOrg();
-      console.log(JSON.stringify(sobj));
+
       sobj.Live_Chat_Key__c = session.key;
       sobj.Live_Chat_Session_Id__c = session.id;
       sobj.Live_Chat_Affinity_Token__c = session.affinityToken;
-      sobj.Live_Chat_Sequence__c = 0;
-      console.log(JSON.stringify(sobj));
+      sobj.Live_Chat_Sequence__c = 1;
 
       var u = nforce.createSObject('Bot_Chat__c', sobj);
-      console.log(JSON.stringify(u));
+
       org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
         .then(function(oauth){
            org.update({sobject: u}, function(err, resp){
@@ -84,9 +85,9 @@ function ChasitorInit(session, sobj){
 		'X-LIVEAGENT-SEQUENCE': 1
 	  },
 	json: {
-			organizationId: "00D3D000000D1gO",
-			deploymentId: "5723D000000000p",
-			buttonId: "5733D000000001s",
+			organizationId: constants.SF_ORGID,
+			deploymentId: constants.SF_DEPLOYMENTID,
+			buttonId: constants.SF_BUTTONID,
 			sessionId: session.id,
 			doFallback: true,
 			userAgent: sobj.Source__c,
@@ -150,20 +151,8 @@ function ChasitorInit(session, sobj){
 }
 
 exports.start = function(message){
-
-  var org = salesforce.getOrg();
-
-  org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
-  .then(function(oAuth){
-         return message;
-  }).then(function(result){
-      console.log(JSON.stringify(result));
-      console.log(result.id);
-      return org.query({ query: 'SELECT Id, Bot_Chat__r.id, Bot_Chat__r.Route_To__c, Bot_Chat__r.Live_Chat_Key__c, Bot_Chat__r.Live_Chat_Session_Id__c, Bot_Chat__r.Live_Chat_Affinity_Token__c, Bot_Chat__r.Live_Chat_Sequence__c, Bot_Chat__r.Source__c, Bot_Chat__r.Session_Id__c, Bot_Response__c, 	Bot_Request__c FROM Bot_Chat_Message__c WHERE Id = \'' + result.id + '\' LIMIT 1' });
-  }).then(function(result){
-      console.log(JSON.stringify(result));
-      console.log('liveagent start');
-      console.log(result.records[0].get('bot_chat__r').Route_To__c);
+   
+  message.then(function(result){
       var session = {
         id: result.records[0].get('bot_chat__r').Live_Chat_Session_Id__c,
         key: result.records[0].get('bot_chat__r').Live_Chat_Key__c,
@@ -172,11 +161,9 @@ exports.start = function(message){
       };
 
     if(result.records[0].get('bot_chat__r').Route_To__c == 'CSR' && session.key == null){
-      console.log('starting live agent ...');
       startSession(result.records[0].get('bot_chat__r'));
     }
     else if(result.records[0].get('bot_chat__r').Route_To__c == 'CSR' && session.key != null){
-      console.log('posting to live agent: ' + result.records[0].get('Bot_Response__c'));
       post(session, nforce.createSObject('Bot_Chat__c', result.records[0].get('bot_chat__r')), result.records[0].get('Bot_Request__c'));
     }
   });
