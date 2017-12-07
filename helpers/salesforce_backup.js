@@ -62,16 +62,16 @@ function logToSalesforce(routeTo, source, sender, params, sessionId, botRequest,
   var org = getOrg();
   return org.authenticate({ username: constants.SF_USERNAME, password: constants.SF_PASSWORD})
     .then(function(oauth){
-      botchat = nforce.createSObject('Bot_Chat__c', {Session_Id__c: sessionId, Source__c: source, Route_To__c: routeTo });
-      console.log(JSON.stringify(botchat));
-      var botmessage = nforce.createSObject('Bot_Chat_Message__c', {Bot_Request__c: botRequest, Bot_Response__c: botResponse, Type__c: routeTo});
-      console.log('Start Apex Rest');
-      var body = {botChat: botchat.toJSON(), botMessage: botmessage.toJSON()};
-      console.log(JSON.stringify(body));
-      return org.apexRest({uri: 'logBotMessage', method: 'POST', body: JSON.stringify(body)  });
+      botchat = nforce.createSObject('Bot_Chat__c', {Source__c: source, Sender_Name__c: sender.name, Sender_Id__c: sender.id, Route_To__c: routeTo });
+      botchat.setExternalId('Session_Id__c', sessionId);
+      return org.upsert({ sobject: botchat });
+  }).then(function(){
+      return org.query({ query: 'SELECT Id, Linked_User__c, Route_To__c, Live_Chat_Key__c, Live_Chat_Session_Id__c, Live_Chat_Affinity_Token__c, Live_Chat_Sequence__c FROM Bot_Chat__c WHERE Session_Id__c = \'' + sessionId + '\' LIMIT 1' });
   }).then(function(result){
-    console.log(result);
-    Linked_User = result.Bot_Chat__r.Linked_User__c
+      Linked_User = result.records[0].get('Linked_User__c');
+      var botmessage = nforce.createSObject('Bot_Chat_Message__c', {	Bot_Chat__c: result.records[0].get('id'), Bot_Request__c: botRequest, Bot_Response__c: botResponse, Type__c: routeTo});
+      return org.insert({ sobject: botmessage });
+  }).then(function(result){
     if(source == 'Facebook' || source == 'SMS')
       liveagent.start(org.query({ query: 'SELECT Id, Bot_Chat__r.id, Bot_Chat__r.Route_To__c, Bot_Chat__r.Live_Chat_Key__c, Bot_Chat__r.Live_Chat_Session_Id__c, Bot_Chat__r.Live_Chat_Affinity_Token__c, Bot_Chat__r.Live_Chat_Sequence__c, Bot_Chat__r.Source__c, Bot_Chat__r.Session_Id__c, Bot_Response__c, 	Bot_Request__c FROM Bot_Chat_Message__c WHERE Id = \'' + result.id + '\' LIMIT 1' }));
 
@@ -97,7 +97,7 @@ function logToSalesforce(routeTo, source, sender, params, sessionId, botRequest,
         //if login is required and user IS Logged in
         else {
           if(typeof params['sf-service'] != 'undefined'){
-             var url = params['sf-service'] + '/' + result.Id;
+             var url = params['sf-service'] + '/' + Linked_User;
              console.log(url);
              return  org.apexRest({uri: url, method: 'GET'}).then(function(result){
                  console.log(result);

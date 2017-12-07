@@ -1,0 +1,72 @@
+{
+  "name": "Hughes Bot Webhook",
+  "description": "This app is the backend for Hughes Bot",
+  "repository": "https://github.com/mjrforce/hughes-bot",
+  "env": {
+    "LIVE_AGENT_URL": {
+      "description": "Salesforce Live Agent URL"
+    },
+    "SF_CLIENT_ID": {
+      "description": "The connected app client id"
+    },
+    "SF_CLIENT_SECRET": {
+      "description": "The connected app client secret"
+    },
+    "SF_REDIRECT_URL": {
+      "description": "The connected app redirect url"
+    },
+    "SF_API_VERSION": {
+      "description": "The api version for nForce",
+      "value":"v27.0"
+    },
+    "SF_ENVIRONMENT": {
+      "description": "The salesforce environment. Values are either sandbox or production",
+      "value":"sandbox"
+    },
+    "SF_USERNAME": {
+      "description": "The salesforce user name for the system user"
+    },
+    "SF_PASSWORD": {
+      "description": "The salesforce password + security token for the system user"
+    },
+    "SF_ORGID": {
+      "description": "The salesforce org id"
+    },
+    "SF_DEPLOYMENTID": {
+      "description": "The salesforce live agent deployment id"
+    },
+    "SF_BUTTONID": {
+      "description": "The salesforce live agent button id"
+    },
+    "SF_ENDPOINT": {
+      "description": "The salesforce community base url"
+    },
+    "HEROKU_URL": {
+      "description": "The heroku base url"
+    },
+    "APIAI_CLIENT_ACCESS_TOKEN": {
+      "description": "The api.ai client access token"
+    },
+    "APIAI_REQUIRE_AUTH": {
+      "description": "Api.ai require authorization flag",
+      "value": true
+    },
+    "APIAI_AUTH_TOKEN": {
+      "description": "The api.ai authorization token. Can be any string.",
+      "value":"an-example-token"
+    },
+    "FB_PAGE_ACCESS_TOKEN": {
+      "description": "The facebook page access token"
+    },
+    "FB_AUTH_TOKEN": {
+      "description": "The facebook authorization token. Can be any string.",
+      "value": "tuxedo_cat"
+    },
+    "TWILIO_AUTH_TOKEN": {
+      "description": "The twilio authorization token"
+    },
+    "TWILIO_ACCOUNT_SID": {
+      "description": "The twilio account SID"
+    }
+  }
+}

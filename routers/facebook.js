@@ -59,7 +59,7 @@ router.post('/', (req, res) => {
     req.body.entry.forEach((entry) => {
       //entry.messaging.forEach((event) => {
          var event = entry.messaging[0];
-
+        
         if(event.account_linking){
            if(event.account_linking.status == 'unlinked'){
              console.log('unlink');
