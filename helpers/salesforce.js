@@ -71,9 +71,12 @@ function logToSalesforce(routeTo, source, sender, params, sessionId, botRequest,
       return org.apexRest({uri: 'logBotMessage', method: 'POST', body: JSON.stringify(body)  });
   }).then(function(result){
     console.log(result);
-    Linked_User = result.Bot_Chat__r.Linked_User__c
-    if(source == 'Facebook' || source == 'SMS')
-      liveagent.start(org.query({ query: 'SELECT Id, Bot_Chat__r.id, Bot_Chat__r.Route_To__c, Bot_Chat__r.Live_Chat_Key__c, Bot_Chat__r.Live_Chat_Session_Id__c, Bot_Chat__r.Live_Chat_Affinity_Token__c, Bot_Chat__r.Live_Chat_Sequence__c, Bot_Chat__r.Source__c, Bot_Chat__r.Session_Id__c, Bot_Response__c, 	Bot_Request__c FROM Bot_Chat_Message__c WHERE Id = \'' + result.id + '\' LIMIT 1' }));
+    Linked_User = result.Bot_Chat__r.Linked_User__c;
+	console.log(result.Id);
+    if(source == 'Facebook' || source == 'SMS'){
+	  console.log('starting live agent');
+      liveagent.start(org.query({ query: 'SELECT Id, Bot_Chat__r.id, Bot_Chat__r.Route_To__c, Bot_Chat__r.Live_Chat_Key__c, Bot_Chat__r.Live_Chat_Session_Id__c, Bot_Chat__r.Live_Chat_Affinity_Token__c, Bot_Chat__r.Live_Chat_Sequence__c, Bot_Chat__r.Source__c, Bot_Chat__r.Session_Id__c, Bot_Response__c, Bot_Request__c FROM Bot_Chat_Message__c WHERE Id = \'' + result.Id + '\' LIMIT 1' }));
+	 }
 
     var toreturn = {
         botResponse: botResponse,

@@ -81,12 +81,19 @@ router.post('/', (req, res) => {
           }).then(function(result){
               console.log('Line 78');
               console.log(JSON.stringify(result));
+			  
+			  if(typeof result.result.fulfillment.data != 'undefined'){
               if(result.result.fulfillment.data.loginRequired == true){
 
                  return facebook.postWithLogin(event.sender.id, result.result.fulfillment.speech);
               }else if(result.result.fulfillment.speech != ''){
                  return facebook.post(event.sender.id, result.result.fulfillment.speech);
              }
+			 }else{
+				if(result.result.fulfillment.speech != ''){
+                // return facebook.post(event.sender.id, result.result.fulfillment.speech);
+				}
+			 }
           });
         }
       //});

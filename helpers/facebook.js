@@ -9,6 +9,7 @@ exports.post = function(senderid, msg){
       json: {
         recipient: {id: senderid},
         message: {text: msg}
+		
       }
     });
 };

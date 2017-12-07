@@ -153,7 +153,9 @@ function ChasitorInit(session, sobj){
 exports.start = function(message){
    
   message.then(function(result){
-      var session = {
+      console.log(result);
+	  console.log(JSON.stringify(result));
+	  var session = {
         id: result.records[0].get('bot_chat__r').Live_Chat_Session_Id__c,
         key: result.records[0].get('bot_chat__r').Live_Chat_Key__c,
         affinityToken: result.records[0].get('bot_chat__r').Live_Chat_Affinity_Token__c,
