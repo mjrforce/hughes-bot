@@ -30,7 +30,8 @@ router.post('/sms', function (req, res) {
       id: req.body.From,
       name: req.body.From
     }).then(function(result){
-     console.log('From SMS');
+     console.log('Sending response to SMS');
+	 console.log(result.result.fulfillment.speech);
      if(result.result.fulfillment.speech != '')
      res.send("<Response><Message>" + result.result.fulfillment.speech + "</Message></Response>");
     });
